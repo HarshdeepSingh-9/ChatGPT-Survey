@@ -1,9 +1,5 @@
 """
-Group 52
-Khushkaran Singh Brar: 501147343
-Zeeshan Khan: 501138213
-Basim Khan: 501202574
-Harshdeep Singh: 501174746
+GRAPH CODE
 """
 import pandas as pd    # Import pandas library
 import matplotlib.pyplot as plt    # Import matplotlib library
