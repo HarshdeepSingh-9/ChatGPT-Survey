@@ -1,25 +1,64 @@
 """
 GRAPH CODE
 """
-import pandas as pd    # Import pandas library
-import matplotlib.pyplot as plt    # Import matplotlib library
+import pandas as pd
+import matplotlib.pyplot as plt
 
-responses_df = pd.read_csv(r"What is ChatGPT ?.csv")    # Assign data to responses_df
+# Function to read responses from a CSV file
+def read_responses(file_path):
+    try:
+        responses_df = pd.read_csv(file_path)
+        return responses_df
+    except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found.")
+        return None
 
-question_cols = ['2. What is your Age group?', '3. What is your Gender?', '4. What is Current Level ?', '5. What is your Field of Study ? ', '6. How much will you rate Artificial Intelligence comparing to Human Intelligence ', '7. Have you ever used ChatGPT ?', '9. Do you think the Development of ChatGPT is ', '10. Will ChatGPT replace Google search engine ?', '11. Should chatGPT be allowed to the students to take help in assignments ?']    # List of questions
-for col in question_cols:    # Iterate over the list of questions
-    data = responses_df[col].value_counts()    # Get counts of each question
-    print(f"\nQuestion: {col}")    # Print the question
-    print(data)    # Print the counts of each question
+# Function to plot responses for a specific question
+def plot_question_responses(df, question_col):
+    data = df[question_col].value_counts()
+    
+    plt.figure(figsize=(10, 5))
+    
+    # Determine the type of plot (bar or pie) based on the question
+    if question_col in ["4. What is Current Level ?", "10. Will ChatGPT replace Google search engine ?"]:
+        plt.bar(data.index, data.values, color='skyblue')
+    else:
+        plt.pie(data.values, labels=data.index, autopct='%1.1f%%', colors=['gold', 'lightcoral', 'lightskyblue'])
+    
+    # Add title and labels to the plot
+    plt.title(f"Responses for {question_col}")
+    plt.xlabel("Answers")
+    plt.ylabel("Number of Responses")
+    
+    # Add legend for pie charts
+    plt.legend(data.index, loc="best") if question_col not in ["4. What is Current Level ?", "10. Will ChatGPT replace Google search engine ?"] else None
+    
+    # Show the plot
+    plt.show()
 
-    plt.figure(figsize=(10,5))    # Create plot area of size(10,5)
+# Main function to execute the analysis
+def main():
+    file_path = r"What is ChatGPT ?.csv"
+    responses_df = read_responses(file_path)
 
-    if col=="4. What is Current Level ?" or col=="10. Will ChatGPT replace Google search engine ?":    # Check the if condition
-        plt.bar(data.index, data.values)    # Plot bar chart
-    else:    # else body
-        plt.pie(data.values, labels=data.index, autopct='%1.1f%%')    # Plot pie chart
+    if responses_df is not None:
+        # List of questions to analyze
+        question_cols = [
+            '2. What is your Age group?',
+            '3. What is your Gender?',
+            '4. What is Current Level ?',
+            '5. What is your Field of Study ?',
+            '6. How much will you rate Artificial Intelligence comparing to Human Intelligence ',
+            '7. Have you ever used ChatGPT ?',
+            '9. Do you think the Development of ChatGPT is ',
+            '10. Will ChatGPT replace Google search engine ?',
+            '11. Should ChatGPT be allowed to the students to take help in assignments ?'
+        ]
+        
+        for col in question_cols:
+            print(f"\nQuestion: {col}")
+            plot_question_responses(responses_df, col)
 
-    plt.title(f"Responses for {col}")    # Set title of the plot
-    plt.xlabel("Answers")    # Set x axis label
-    plt.ylabel("Number of Responses")    # Set y axis label
-    plt.show()    # Show the plot
+if __name__ == "__main__":
+    main()
+
